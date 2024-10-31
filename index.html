@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resoluções - Cálculo A (Diva Flemming)</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Cálculo A - Resoluções</a>
+  </nav>
+
+  <div class="container mt-4">
+    <h1>Exercícios de Cálculo A - Diva Flemming</h1>
+    <div id="capitulos" class="mt-3"></div>
+    <div id="partes" class="mt-3" style="display: none;"></div>
+    <div id="exercicios" class="mt-3" style="display: none;"></div>
+    <div id="resolucao" class="mt-3 p-3 bg-light border rounded" style="display: none;">
+      <h4>Resolução</h4>
+      <p id="resolucao-conteudo"></p>
+      <button class="btn btn-secondary mt-3" onclick="voltarParaExercicios()">Voltar para os Exercícios</button>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const capitulosDiv = document.getElementById('capitulos');
+    const partesDiv = document.getElementById('partes');
+    const exerciciosDiv = document.getElementById('exercicios');
+    const resolucaoDiv = document.getElementById('resolucao');
+    const resolucaoConteudo = document.getElementById('resolucao-conteudo');
+
+    // Função para exibir a lista de capítulos
+    function mostrarCapitulos() {
+      capitulosDiv.innerHTML = '<h2>Capítulos</h2>';
+      const capitulos = [...new Set(questoesParte2.map(q => q.capitulo))]; // Obter capítulos únicos
+      capitulos.forEach(capitulo => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary btn-block mb-2';
+        btn.textContent = `Capítulo ${capitulo}`;
+        btn.onclick = () => mostrarPartes(capitulo);
+        capitulosDiv.appendChild(btn);
+      });
+      partesDiv.style.display = 'none';
+      exerciciosDiv.style.display = 'none';
+      resolucaoDiv.style.display = 'none';
+      capitulosDiv.style.display = 'block';
+    }
+
+    // Função para exibir as partes de um capítulo
+    function mostrarPartes(capitulo) {
+      partesDiv.innerHTML = `<h2>Partes do Capítulo ${capitulo}</h2>`;
+      const partes = ["1", "2"]; // Pode expandir conforme necessário para mais partes
+      partes.forEach(parte => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-secondary btn-block mb-2';
+        btn.textContent = `Parte ${parte}`;
+        btn.onclick = () => mostrarExercicios(capitulo, parte);
+        partesDiv.appendChild(btn);
+      });
+      capitulosDiv.style.display = 'none';
+      exerciciosDiv.style.display = 'none';
+      resolucaoDiv.style.display = 'none';
+      partesDiv.style.display = 'block';
+    }
+
+    // Função para exibir os exercícios de uma parte específica de um capítulo
+    function mostrarExercicios(capitulo, parte) {
+      exerciciosDiv.innerHTML = `<h2>Exercícios do Capítulo ${capitulo}, Parte ${parte}</h2>`;
+      const questoes = parte === "1" ? questoes : questoesParte2;
+      questoes.filter(q => q.capitulo === capitulo).forEach(questao => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.innerHTML = `<a href="#" onclick="mostrarResolucao(${questao.id})">${questao.numero}: ${questao.titulo}</a>`;
+        exerciciosDiv.appendChild(li);
+      });
+      partesDiv.style.display = 'none';
+      resolucaoDiv.style.display = 'none';
+      exerciciosDiv.style.display = 'block';
+    }
+
+    // Função para exibir a resolução do exercício selecionado
+    function mostrarResolucao(id) {
+      const questao = [...questoes, ...questoesParte2].find(q => q.id === id);
+      if (questao) {
+        resolucaoConteudo.innerHTML = questao.resolucao;
+        resolucaoDiv.style.display = 'block';
+        exerciciosDiv.style.display = 'none';
+      }
+    }
+
+    // Função para voltar à lista de exercícios
+    function voltarParaExercicios() {
+      resolucaoDiv.style.display = 'none';
+      exerciciosDiv.style.display = 'block';
+    }
+
+    // Inicialização
+    mostrarCapitulos();
+  </script>
+</body>
+</html>
